@@ -64,4 +64,3 @@ class BaseStartupSpider(scrapy.spider):
     
     @abstractmethod
     def parse(self, response): ...
-    
