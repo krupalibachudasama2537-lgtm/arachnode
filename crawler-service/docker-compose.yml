@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+
+  crawler:
+    build: ./crawler-service
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JOBSEEKER_ROLE: "Backend Engineer"
+      JOBSEEKER_STACK: "Python,Go,FastAPI,PostgreSQL,Kubernetes,Django"
+    depends_on:
+      redis:
+        condition: service_healthy
+    # Runs once and exits — use cron or restart: on-failure for scheduling
+    restart: "no"
+    command: ["scrapy", "crawl", "remotive"]
+
+  # Uncomment to monitor the Redis stream in real time
+  # redis-cli:
+  #   image: redis:7-alpine
+  #   depends_on: [redis]
+  #   command: redis-cli -h redis XREAD COUNT 10 STREAMS jobs:raw 0
