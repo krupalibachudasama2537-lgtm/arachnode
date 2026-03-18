@@ -58,3 +58,10 @@ class BaseStartupSpider(scrapy.spider):
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Firefox/123.0",
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/122.0.0.0 Safari/537.36"
     }
+
+    def get_headers(self):
+        return {"User-Agent": random.choice(self.USER_AGENTS)}
+    
+    @abstractmethod
+    def parse(self, response): ...
+    
