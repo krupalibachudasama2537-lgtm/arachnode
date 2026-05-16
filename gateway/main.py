@@ -1,14 +1,14 @@
-﻿"""
-main.py â€” FastAPI API Gateway for the Job Discovery System.
+"""
+main.py — FastAPI API Gateway for the Job Discovery System.
 
 Routes:
-  /api/jobs/*         â†’ aggregator:8000
-  /api/scrape         â†’ scraper:8001
-  /api/contacts/*     â†’ contact:8002
-  /api/emails/*       â†’ email-gen:8003
+  /api/jobs/*         → aggregator:8000
+  /api/scrape         → scraper:8001
+  /api/contacts/*     → contact:8002
+  /api/emails/*       → email-gen:8003
 
 Composite endpoints (gateway-owned logic):
-  POST /api/workflow/apply   Orchestrates job â†’ discovery â†’ email draft
+  POST /api/workflow/apply   Orchestrates job → discovery → email draft
   GET  /api/health           Fans out to all four services
 
 Dashboard:
@@ -35,7 +35,7 @@ import proxy
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s  %(levelname)-8s  %(name)s â€” %(message)s",
+    format="%(asctime)s  %(levelname)-8s  %(name)s — %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ SUMMARY_PATH   = Path(os.environ.get("SUMMARY_PATH", "/data/run_summary.json"))
 
 
 # ---------------------------------------------------------------------------
-# Lifespan â€” shared httpx client
+# Lifespan — shared httpx client
 # ---------------------------------------------------------------------------
 
 @asynccontextmanager
@@ -119,7 +119,7 @@ async def run_summary():
 
 
 # ---------------------------------------------------------------------------
-# Proxy routes â€” /api/jobs/*
+# Proxy routes — /api/jobs/*
 # ---------------------------------------------------------------------------
 
 @app.api_route("/api/jobs", methods=["GET", "POST"], tags=["proxy"])
@@ -138,7 +138,7 @@ async def proxy_stats(request: Request):
 
 
 # ---------------------------------------------------------------------------
-# Proxy routes â€” /api/scrape
+# Proxy routes — /api/scrape
 # ---------------------------------------------------------------------------
 
 @app.api_route("/api/scrape", methods=["GET", "POST"], tags=["proxy"])
@@ -147,7 +147,7 @@ async def proxy_scrape(request: Request):
 
 
 # ---------------------------------------------------------------------------
-# Proxy routes â€” /api/contacts/*
+# Proxy routes — /api/contacts/*
 # ---------------------------------------------------------------------------
 
 @app.api_route("/api/contacts", methods=["GET", "POST"], tags=["proxy"])
@@ -166,7 +166,7 @@ async def proxy_discover(request: Request):
 
 
 # ---------------------------------------------------------------------------
-# Proxy routes â€” /api/emails/*
+# Proxy routes — /api/emails/*
 # ---------------------------------------------------------------------------
 
 @app.api_route("/api/emails", methods=["GET"], tags=["proxy"])
@@ -185,7 +185,7 @@ async def proxy_generate(request: Request):
 
 
 # ---------------------------------------------------------------------------
-# Composite endpoint â€” POST /api/workflow/apply
+# Composite endpoint — POST /api/workflow/apply
 # ---------------------------------------------------------------------------
 
 class WorkflowRequest(BaseModel):
@@ -204,23 +204,23 @@ async def workflow_apply(body: WorkflowRequest):
       4. Generate a draft email for the first verified/unverified contact.
       5. Return job + contacts + draft email in a single response.
     """
-    # Step 1 â€” Job details
+    # Step 1 — Job details
     job = await proxy.get_job(body.job_id)
 
-    # Step 2 â€” Trigger discovery (runs in background on the contact service)
+    # Step 2 — Trigger discovery (runs in background on the contact service)
     await proxy.trigger_discovery(
         company=job["company"],
         job_id=body.job_id,
         roles=body.roles,
     )
 
-    # Step 3 â€” Wait for the background pipeline to populate contacts
+    # Step 3 — Wait for the background pipeline to populate contacts
     # (contact discovery is fire-and-background; the aggregator typically
     #  completes the DB-only part in <2 s when names are already known)
     await asyncio.sleep(3)
     contacts = await proxy.get_contacts_for_company(job["company"])
 
-    # Step 4 â€” Pick the best contact for email generation
+    # Step 4 — Pick the best contact for email generation
     contact_id: Optional[UUID] = None
     if contacts:
         # Prefer verified > unverified; ignore 'invalid'
@@ -231,7 +231,7 @@ async def workflow_apply(body: WorkflowRequest):
         if ordered:
             contact_id = UUID(ordered[0]["id"])
 
-    # Step 5 â€” Generate email draft
+    # Step 5 — Generate email draft
     try:
         email = await proxy.generate_email(
             job_id=body.job_id,

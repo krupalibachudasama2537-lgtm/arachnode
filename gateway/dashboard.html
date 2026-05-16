@@ -1,6 +1,6 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--
-  JobHunter Dashboard â€” single-file SPA served by FastAPI gateway at GET /
+  JobHunter Dashboard — single-file SPA served by FastAPI gateway at GET /
   =========================================================================
   API dependencies per view:
     Jobs:     GET /api/jobs, PATCH /api/jobs/{id}/status, POST /api/workflow/apply
@@ -935,12 +935,12 @@
         <button class="nav-tab" data-tab="stats">Stats</button>
       </div>
     </div>
-    <button id="btn-scrape">â–¶ Trigger Scrape</button>
+    <button id="btn-scrape">▶ Trigger Scrape</button>
   </nav>
 
   <!-- OFFLINE BANNER -->
   <div id="offline-banner">
-    <span>âš  Cannot reach backend â€” is the gateway running?</span>
+    <span>⚠ Cannot reach backend — is the gateway running?</span>
     <button class="btn-outline" style="height:26px;font-size:12px" id="btn-dismiss-banner">Dismiss</button>
   </div>
 
@@ -950,7 +950,7 @@
     <!-- JOBS TAB -->
     <section id="tab-jobs" class="tab-view active">
       <div class="filter-bar">
-        <input type="text" id="job-search" placeholder="Search company or roleâ€¦" />
+        <input type="text" id="job-search" placeholder="Search company or role…" />
         <select id="job-status-filter">
           <option value="all">All statuses</option>
           <option value="new">New</option>
@@ -973,7 +973,7 @@
     <!-- CONTACTS TAB -->
     <section id="tab-contacts" class="tab-view">
       <div class="filter-bar">
-        <input type="text" id="contact-search" placeholder="Filter by companyâ€¦" />
+        <input type="text" id="contact-search" placeholder="Filter by company…" />
         <button class="btn-outline" id="btn-refresh-contacts">Refresh</button>
       </div>
       <div id="contacts-table-wrap" class="table-wrap">
@@ -1017,22 +1017,22 @@
       <div class="metric-grid">
         <div class="metric-card">
           <div class="metric-label">Total Jobs</div>
-          <div class="metric-value" id="s-total">â€”</div>
+          <div class="metric-value" id="s-total">—</div>
           <div class="metric-trend" id="s-total-t"></div>
         </div>
         <div class="metric-card">
           <div class="metric-label">Applied</div>
-          <div class="metric-value" id="s-applied" style="color:var(--green)">â€”</div>
+          <div class="metric-value" id="s-applied" style="color:var(--green)">—</div>
           <div class="metric-trend" id="s-applied-t"></div>
         </div>
         <div class="metric-card">
           <div class="metric-label">Contacts Found</div>
-          <div class="metric-value" id="s-contacts" style="color:var(--accent)">â€”</div>
+          <div class="metric-value" id="s-contacts" style="color:var(--accent)">—</div>
           <div class="metric-trend" id="s-contacts-t"></div>
         </div>
         <div class="metric-card">
           <div class="metric-label">Emails Drafted</div>
-          <div class="metric-value" id="s-emails" style="color:var(--blue)">â€”</div>
+          <div class="metric-value" id="s-emails" style="color:var(--blue)">—</div>
           <div class="metric-trend" id="s-emails-t"></div>
         </div>
       </div>
@@ -1043,7 +1043,7 @@
         <h4>Last Pipeline Run</h4>
         <div id="summary-content">
           <div class="empty">
-            <div class="empty-icon">ðŸ•</div>
+            <div class="empty-icon">🕐</div>
             <p>No run summary yet.</p>
           </div>
         </div>
@@ -1060,7 +1060,7 @@
         <div id="panel-company" style="font-size:16px;font-weight:500"></div>
         <div id="panel-role" style="font-size:13px;color:var(--muted);margin-top:2px"></div>
       </div>
-      <button class="btn-close-x" id="panel-close">âœ•</button>
+      <button class="btn-close-x" id="panel-close">✕</button>
     </div>
     <div id="panel-content"></div>
   </aside>
@@ -1070,7 +1070,7 @@
     <div class="modal">
       <div class="modal-header">
         <h3>Trigger Scrape</h3>
-        <button class="btn-close-x" id="modal-close">âœ•</button>
+        <button class="btn-close-x" id="modal-close">✕</button>
       </div>
       <div class="modal-body">
         <div class="field-group">
@@ -1177,7 +1177,7 @@
       return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
     function relTime(iso) {
-      if (!iso) return 'â€”';
+      if (!iso) return '—';
       const diff = Date.now() - new Date(iso).getTime();
       const m = Math.floor(diff / 60000);
       if (m < 2) return 'just now';
@@ -1189,7 +1189,7 @@
       return new Date(iso).toLocaleDateString();
     }
     function fmtDate(iso) {
-      if (!iso) return 'â€”';
+      if (!iso) return '—';
       return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
     }
     function verifiedBadge(v) {
@@ -1213,7 +1213,7 @@
       document.getElementById('jobs-grid').innerHTML = `<div style="grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:12px">${skelCards(6)}</div>`;
       const data = await apiFetch('/jobs?limit=200');
       if (!data) {
-        document.getElementById('jobs-grid').innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">âš </div><p>Failed to load jobs. <button class="btn-outline" onclick="loadJobs(true)">Retry</button></p></div>`;
+        document.getElementById('jobs-grid').innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">⚠</div><p>Failed to load jobs. <button class="btn-outline" onclick="loadJobs(true)">Retry</button></p></div>`;
         return;
       }
       state.jobs = Array.isArray(data) ? data : (data.jobs || []);
@@ -1248,15 +1248,15 @@
       const jobs = filteredJobs();
       const grid = document.getElementById('jobs-grid');
       if (!jobs.length) {
-        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">ðŸ”</div><p>No jobs found. Trigger a scrape to get started.</p></div>`;
+        grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div><p>No jobs found. Trigger a scrape to get started.</p></div>`;
         return;
       }
       grid.innerHTML = jobs.map(j => `
     <div class="job-card status-${esc(j.status || 'new')}" data-id="${esc(j.id)}">
       <div class="card-actions">
-        <button class="icon-btn" data-action="discover" data-id="${esc(j.id)}" title="Find contacts">ðŸ‘¤</button>
-        <button class="icon-btn" data-action="draft" data-id="${esc(j.id)}" title="Draft email">âœ‰</button>
-        <button class="icon-btn" data-action="apply" data-id="${esc(j.id)}" title="Mark applied">âœ“</button>
+        <button class="icon-btn" data-action="discover" data-id="${esc(j.id)}" title="Find contacts">👤</button>
+        <button class="icon-btn" data-action="draft" data-id="${esc(j.id)}" title="Draft email">✉</button>
+        <button class="icon-btn" data-action="apply" data-id="${esc(j.id)}" title="Mark applied">✓</button>
       </div>
       <div class="card-company">${esc(j.company)}</div>
       <div class="card-role">${esc(j.role)}</div>
@@ -1264,7 +1264,7 @@
         ${(j.stack || []).slice(0, 5).map(t => `<span class="tag">${esc(t)}</span>`).join('')}
       </div>
       <div class="card-footer">
-        <span class="tag tag-gray">${esc(j.source || 'â€”')}</span>
+        <span class="tag tag-gray">${esc(j.source || '—')}</span>
         <span>${relTime(j.posted_at)}</span>
       </div>
     </div>`).join('');
@@ -1273,7 +1273,7 @@
     async function discoverForJob(jobId) {
       const job = state.jobs.find(j => j.id === jobId);
       if (!job) return;
-      toast(`Discovering contacts for ${job.company}â€¦`, 'info');
+      toast(`Discovering contacts for ${job.company}…`, 'info');
       const r = await apiFetch('/workflow/apply', { method: 'POST', body: { job_id: jobId, template: 'cold_outreach' } });
       if (r) toast(`Workflow triggered for ${job.company}`, 'success');
     }
@@ -1281,12 +1281,12 @@
     async function draftForJob(jobId) {
       const job = state.jobs.find(j => j.id === jobId);
       if (!job) return;
-      toast('Generating draft emailâ€¦', 'info');
+      toast('Generating draft email…', 'info');
       const r = await apiFetch('/workflow/apply', { method: 'POST', body: { job_id: jobId, template: 'cold_outreach' } });
       if (r?.draft_email) {
         const { subject, body } = r.draft_email;
         openDetailPanel(jobId);
-        toast('Draft generated â€” see panel', 'success');
+        toast('Draft generated — see panel', 'success');
       }
     }
 
@@ -1317,11 +1317,11 @@
       document.getElementById('panel-content').innerHTML = `
     <div class="panel-section">
       <h4>Details</h4>
-      <div class="detail-field"><span class="detail-label">Source</span><span>${esc(job.source || 'â€”')}</span></div>
+      <div class="detail-field"><span class="detail-label">Source</span><span>${esc(job.source || '—')}</span></div>
       <div class="detail-field"><span class="detail-label">Status</span>${statusBadge(job.status)}</div>
-      <div class="detail-field"><span class="detail-label">Location</span><span>${esc(job.location || 'â€”')}</span></div>
+      <div class="detail-field"><span class="detail-label">Location</span><span>${esc(job.location || '—')}</span></div>
       <div class="detail-field"><span class="detail-label">Posted</span><span>${fmtDate(job.posted_at)}</span></div>
-      ${job.url ? `<div class="detail-field"><span class="detail-label">URL</span><a href="${esc(job.url)}" target="_blank" style="color:var(--accent)">Open â†—</a></div>` : ''}
+      ${job.url ? `<div class="detail-field"><span class="detail-label">URL</span><a href="${esc(job.url)}" target="_blank" style="color:var(--accent)">Open ↗</a></div>` : ''}
     </div>
     <div class="panel-section" id="panel-contacts-section">
       <h4>Contacts</h4><div class="skel skel-row"></div>
@@ -1344,8 +1344,8 @@
         } else {
           cSect.innerHTML = `<h4>Contacts</h4>${contacts.map(c => `
         <div style="margin-bottom:8px;font-size:13px">
-          <div style="font-weight:500">${esc(c.name || 'â€”')}</div>
-          <div style="color:var(--muted)">${esc(c.email || 'â€”')} Â· ${verifiedBadge(c.verified)}</div>
+          <div style="font-weight:500">${esc(c.name || '—')}</div>
+          <div style="color:var(--muted)">${esc(c.email || '—')} · ${verifiedBadge(c.verified)}</div>
         </div>`).join('')}`;
         }
       }
@@ -1363,13 +1363,13 @@
           eSect.innerHTML = `<h4>Emails</h4>${emails.map(e => `
         <div style="margin-bottom:8px;padding:10px;border:1px solid var(--border);border-radius:6px;font-size:12px">
           <div style="font-weight:500;margin-bottom:2px">${esc(e.subject)}</div>
-          <div style="color:var(--muted)">${esc(e.template)} Â· ${statusBadge(e.status)}</div>
+          <div style="color:var(--muted)">${esc(e.template)} · ${statusBadge(e.status)}</div>
         </div>`).join('')}
         <div style="margin-top:10px">${tmplSel}<button class="btn-accent" id="panel-draft-btn" style="height:30px;font-size:12px">Draft New</button></div>`;
         }
         document.getElementById('panel-draft-btn')?.addEventListener('click', async () => {
           const tmpl = document.getElementById('panel-tmpl')?.value || 'cold_outreach';
-          toast('Generatingâ€¦', 'info');
+          toast('Generating…', 'info');
           const r = await apiFetch('/workflow/apply', { method: 'POST', body: { job_id: job.id, template: tmpl } });
           if (r) { toast('Draft created!', 'success'); fetchPanelData(job); }
         });
@@ -1410,24 +1410,24 @@
       // Update sort icons
       document.querySelectorAll('#contacts-table th .sort-icon').forEach(el => el.textContent = '');
       const th = document.querySelector(`#contacts-table th[data-col="${state.contactSort.col}"] .sort-icon`);
-      if (th) th.textContent = state.contactSort.dir === 1 ? 'â†‘' : 'â†“';
+      if (th) th.textContent = state.contactSort.dir === 1 ? '↑' : '↓';
 
       if (!sorted.length) {
-        document.getElementById('contacts-body').innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">ðŸ‘¤</div><p>No contacts discovered yet for this job.</p></div></td></tr>`;
+        document.getElementById('contacts-body').innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">👤</div><p>No contacts discovered yet for this job.</p></div></td></tr>`;
         return;
       }
       document.getElementById('contacts-body').innerHTML = sorted.map((c, i) => `
     <tr class="contact-row" data-idx="${i}" style="cursor:pointer">
-      <td>${esc(c.name || 'â€”')}</td>
-      <td>${esc(c.email || 'â€”')}</td>
-      <td>${esc(c.role || 'â€”')}</td>
+      <td>${esc(c.name || '—')}</td>
+      <td>${esc(c.email || '—')}</td>
+      <td>${esc(c.role || '—')}</td>
       <td>${esc(c.company)}</td>
       <td>${verifiedBadge(c.verified)}</td>
       <td>${relTime(c.created_at)}</td>
     </tr>
     <tr id="cexpand-${i}" style="display:none">
       <td colspan="6" class="expand-row">
-        <strong>Source:</strong> ${esc(c.source || 'â€”')} &nbsp;&nbsp;
+        <strong>Source:</strong> ${esc(c.source || '—')} &nbsp;&nbsp;
         ${c.email ? `<button class="btn-outline" style="height:26px;font-size:12px" onclick="copyText('${esc(c.email)}')">Copy email</button>` : ''}
       </td>
     </tr>`).join('');
@@ -1455,20 +1455,20 @@
       allEmails.sort((a, b) => new Date(b.generated_at) - new Date(a.generated_at));
 
       if (!allEmails.length) {
-        document.getElementById('emails-body').innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">âœ‰</div><p>No emails drafted. Click 'Draft email' on a job card.</p></div></td></tr>`;
+        document.getElementById('emails-body').innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">✉</div><p>No emails drafted. Click 'Draft email' on a job card.</p></div></td></tr>`;
         return;
       }
 
       document.getElementById('emails-body').innerHTML = allEmails.map((e, i) => `
     <tr class="email-row" data-i="${i}">
-      <td><div style="font-weight:500">${esc(e._job?.company || 'â€”')}</div><div style="font-size:12px;color:var(--muted)">${esc(e._job?.role || 'â€”')}</div></td>
-      <td style="font-size:12px;color:var(--muted)">${esc(e.contact_id?.slice(0, 8) || 'â€”')}â€¦</td>
+      <td><div style="font-weight:500">${esc(e._job?.company || '—')}</div><div style="font-size:12px;color:var(--muted)">${esc(e._job?.role || '—')}</div></td>
+      <td style="font-size:12px;color:var(--muted)">${esc(e.contact_id?.slice(0, 8) || '—')}…</td>
       <td><span class="badge badge-gray">${esc(e.template)}</span></td>
       <td>${statusBadge(e.status)}</td>
       <td style="font-size:12px;color:var(--muted)">${relTime(e.generated_at)}</td>
       <td style="display:flex;gap:6px">
-        <button class="icon-btn email-view-btn" data-i="${i}" title="View">ðŸ‘</button>
-        <button class="icon-btn email-send-btn" data-id="${esc(e.id)}" data-i="${i}" title="Send">ðŸ“¤</button>
+        <button class="icon-btn email-view-btn" data-i="${i}" title="View">👁</button>
+        <button class="icon-btn email-send-btn" data-id="${esc(e.id)}" data-i="${i}" title="Send">📤</button>
       </td>
     </tr>
     <tr id="eexpand-${i}" style="display:none">
@@ -1514,10 +1514,10 @@
       const bySource = stats.by_source || {};
 
       const total = Object.values(byStatus).reduce((a, b) => a + b, 0);
-      document.getElementById('s-total').textContent = total || 'â€”';
-      document.getElementById('s-applied').textContent = byStatus.applied ?? 'â€”';
-      document.getElementById('s-contacts').textContent = sum.contacts_found ?? 'â€”';
-      document.getElementById('s-emails').textContent = sum.emails_drafted ?? 'â€”';
+      document.getElementById('s-total').textContent = total || '—';
+      document.getElementById('s-applied').textContent = byStatus.applied ?? '—';
+      document.getElementById('s-contacts').textContent = sum.contacts_found ?? '—';
+      document.getElementById('s-emails').textContent = sum.emails_drafted ?? '—';
 
       // Chart
       const labels = Object.keys(bySource);
@@ -1554,11 +1554,11 @@
       const errCount = (sum.errors || []).length;
       document.getElementById('summary-content').innerHTML = sum.run_at ? `
     <div class="summary-row"><span>Last run</span><span>${relTime(sum.run_at)}</span></div>
-    <div class="summary-row"><span>Jobs discovered</span><span>${sum.jobs_discovered ?? 'â€”'}</span></div>
-    <div class="summary-row"><span>Contacts found</span><span>${sum.contacts_found ?? 'â€”'}</span></div>
-    <div class="summary-row"><span>Emails drafted</span><span>${sum.emails_drafted ?? 'â€”'}</span></div>
+    <div class="summary-row"><span>Jobs discovered</span><span>${sum.jobs_discovered ?? '—'}</span></div>
+    <div class="summary-row"><span>Contacts found</span><span>${sum.contacts_found ?? '—'}</span></div>
+    <div class="summary-row"><span>Emails drafted</span><span>${sum.emails_drafted ?? '—'}</span></div>
     <div class="summary-row"><span>Errors</span><span>${errCount > 0 ? `<span class="badge badge-red">${errCount}</span>` : '<span class="badge badge-green">None</span>'}</span></div>
-  ` : `<div class="empty"><div class="empty-icon">ðŸ•</div><p>No run summary yet. Scheduler hasn't completed a cycle.</p></div>`;
+  ` : `<div class="empty"><div class="empty-icon">🕐</div><p>No run summary yet. Scheduler hasn't completed a cycle.</p></div>`;
     }
 
     // ===========================================================================
@@ -1679,7 +1679,7 @@
       btn.disabled = true;
       const r = await apiFetch('/scrape', { method: 'POST', body: { role, stack } });
       btn.disabled = false;
-      if (r !== null) toast('Scraping started â€” new jobs will appear in ~60 seconds', 'info', 6000);
+      if (r !== null) toast('Scraping started — new jobs will appear in ~60 seconds', 'info', 6000);
     });
 
     // Offline banner dismiss
