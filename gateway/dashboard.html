@@ -12,7 +12,7 @@
   To change the backend URL: edit API_BASE constant at the top of the <script> block.
 
   Theme: toggled via data-theme="dark"|"light" on <html>, persisted to localStorage.
-  Background: tsParticles (CDN) — GPU-accelerated, theme-aware, non-distracting.
+  Background: Canvas particle web — GPU-accelerated, theme-aware, non-distracting.
 -->
 <html lang="en" data-theme="dark">
 
@@ -21,73 +21,72 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Arachnode</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js" defer></script>
   <style>
     /* ============================================================
-       DESIGN TOKENS — dark theme defaults
+       DESIGN TOKENS
     ============================================================ */
     :root,
     [data-theme="dark"] {
-      --accent: #7c5cfc;
-      --accent-2: #4f9eff;
-      --accent-low: rgba(124, 92, 252, .12);
-      --accent-glow: rgba(124, 92, 252, .25);
-      --bg: #0a0a0f;
-      --bg-2: #0f0f18;
-      --surface: #13131f;
-      --surface-2: #1a1a2e;
-      --border: rgba(255, 255, 255, .08);
+      --accent:       #7c5cfc;
+      --accent-2:     #4f9eff;
+      --accent-low:   rgba(124, 92, 252, .12);
+      --accent-glow:  rgba(124, 92, 252, .25);
+      --bg:           #0a0a0f;
+      --bg-2:         #0f0f18;
+      --surface:      #13131f;
+      --surface-2:    #1a1a2e;
+      --border:       rgba(255, 255, 255, .08);
       --border-hover: rgba(255, 255, 255, .16);
-      --text: #e8e8f0;
-      --text-dim: #a0a0b8;
-      --muted: #5a5a78;
-      --green: #22c55e;
-      --green-low: rgba(34, 197, 94, .12);
-      --amber: #f59e0b;
-      --amber-low: rgba(245, 158, 11, .12);
-      --red: #ef4444;
-      --red-low: rgba(239, 68, 68, .12);
-      --blue: #3b82f6;
-      --blue-low: rgba(59, 130, 246, .12);
-      --radius: 10px;
-      --radius-sm: 6px;
-      --n-h: 54px;
-      --trans: 200ms cubic-bezier(.4,0,.2,1);
-      --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-      --shadow: 0 4px 24px rgba(0,0,0,.4);
-      --shadow-sm: 0 2px 8px rgba(0,0,0,.3);
-      --glass: rgba(19, 19, 31, .8);
+      --text:         #e8e8f0;
+      --text-dim:     #a0a0b8;
+      --muted:        #5a5a78;
+      --green:        #22c55e;
+      --green-low:    rgba(34, 197, 94, .12);
+      --amber:        #f59e0b;
+      --amber-low:    rgba(245, 158, 11, .12);
+      --red:          #ef4444;
+      --red-low:      rgba(239, 68, 68, .12);
+      --blue:         #3b82f6;
+      --blue-low:     rgba(59, 130, 246, .12);
+      --radius:       10px;
+      --radius-sm:    6px;
+      --n-h:          54px;
+      --trans:        200ms cubic-bezier(.4,0,.2,1);
+      --font-mono:    'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      --shadow:       0 4px 24px rgba(0,0,0,.4);
+      --shadow-sm:    0 2px 8px rgba(0,0,0,.3);
+      --glass:        rgba(19, 19, 31, .8);
       --glass-border: rgba(255,255,255,.06);
-      --particle-color: #7c5cfc;
+      --particle-rgb: 124, 92, 252;
     }
 
     [data-theme="light"] {
-      --accent: #6c47ff;
-      --accent-2: #2563eb;
-      --accent-low: rgba(108, 71, 255, .08);
-      --accent-glow: rgba(108, 71, 255, .15);
-      --bg: #f8f7ff;
-      --bg-2: #f0eeff;
-      --surface: #ffffff;
-      --surface-2: #f3f0ff;
-      --border: rgba(0, 0, 0, .08);
+      --accent:       #6c47ff;
+      --accent-2:     #2563eb;
+      --accent-low:   rgba(108, 71, 255, .08);
+      --accent-glow:  rgba(108, 71, 255, .15);
+      --bg:           #f8f7ff;
+      --bg-2:         #f0eeff;
+      --surface:      #ffffff;
+      --surface-2:    #f3f0ff;
+      --border:       rgba(0, 0, 0, .08);
       --border-hover: rgba(0, 0, 0, .16);
-      --text: #0f0f1a;
-      --text-dim: #4a4a6a;
-      --muted: #8a8aaa;
-      --green: #16a34a;
-      --green-low: rgba(22, 163, 74, .08);
-      --amber: #d97706;
-      --amber-low: rgba(217, 119, 6, .08);
-      --red: #dc2626;
-      --red-low: rgba(220, 38, 38, .08);
-      --blue: #2563eb;
-      --blue-low: rgba(37, 99, 235, .08);
-      --shadow: 0 4px 24px rgba(108,71,255,.08);
-      --shadow-sm: 0 2px 8px rgba(0,0,0,.06);
-      --glass: rgba(255, 255, 255, .85);
+      --text:         #0f0f1a;
+      --text-dim:     #4a4a6a;
+      --muted:        #8a8aaa;
+      --green:        #16a34a;
+      --green-low:    rgba(22, 163, 74, .08);
+      --amber:        #d97706;
+      --amber-low:    rgba(217, 119, 6, .08);
+      --red:          #dc2626;
+      --red-low:      rgba(220, 38, 38, .08);
+      --blue:         #2563eb;
+      --blue-low:     rgba(37, 99, 235, .08);
+      --shadow:       0 4px 24px rgba(108,71,255,.08);
+      --shadow-sm:    0 2px 8px rgba(0,0,0,.06);
+      --glass:        rgba(255, 255, 255, .85);
       --glass-border: rgba(108,71,255,.1);
-      --particle-color: #6c47ff;
+      --particle-rgb: 108, 71, 255;
     }
 
     /* ============================================================
@@ -97,13 +96,10 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-    }
-
-    html {
-      /* Smooth theme transitions on everything */
       transition:
         background-color var(--trans),
-        color var(--trans);
+        color var(--trans),
+        border-color var(--trans);
     }
 
     body {
@@ -114,9 +110,6 @@
       line-height: 1.5;
       min-height: 100vh;
       overflow-x: hidden;
-      transition:
-        background-color var(--trans),
-        color var(--trans);
     }
 
     button { cursor: pointer; font: inherit; border: none; background: none; }
@@ -124,9 +117,9 @@
     a { color: inherit; text-decoration: none; }
 
     /* ============================================================
-       PARTICLES BACKGROUND
+       PARTICLE CANVAS BACKGROUND
     ============================================================ */
-    #tsparticles {
+    #arachnode-bg {
       position: fixed;
       inset: 0;
       z-index: 0;
@@ -157,7 +150,6 @@
       padding: 0 24px;
       z-index: 200;
       gap: 16px;
-      transition: background var(--trans), border-color var(--trans);
     }
 
     .brand {
@@ -224,19 +216,20 @@
       gap: 10px;
     }
 
-    /* Theme toggle */
+    /* Theme toggle button */
     #btn-theme {
-      width: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       height: 36px;
+      padding: 0 14px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text-dim);
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all var(--trans);
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
       flex-shrink: 0;
     }
 
@@ -254,7 +247,6 @@
       font-size: 13px;
       font-weight: 500;
       transition: opacity var(--trans), box-shadow var(--trans);
-      box-shadow: 0 0 0 rgba(124,92,252,0);
     }
 
     #btn-scrape:hover {
@@ -317,7 +309,6 @@
       background: var(--surface);
       font-size: 13px;
       outline: none;
-      transition: border-color var(--trans), background var(--trans), box-shadow var(--trans);
       color: var(--text);
     }
 
@@ -343,7 +334,6 @@
       font-weight: 500;
       background: var(--surface);
       color: var(--text-dim);
-      transition: all var(--trans);
     }
 
     .btn-outline:hover {
@@ -360,7 +350,6 @@
       border-radius: var(--radius-sm);
       font-size: 13px;
       font-weight: 500;
-      transition: opacity var(--trans), box-shadow var(--trans);
     }
 
     .btn-accent:hover {
@@ -388,7 +377,6 @@
       -webkit-backdrop-filter: blur(12px);
       padding: 18px;
       cursor: pointer;
-      transition: all var(--trans);
       position: relative;
       border-left: 3px solid var(--border);
       overflow: hidden;
@@ -412,7 +400,7 @@
 
     .job-card:hover::before { opacity: 1; }
 
-    .job-card.status-new    { border-left-color: var(--amber); }
+    .job-card.status-new     { border-left-color: var(--amber); }
     .job-card.status-applied { border-left-color: var(--green); }
     .job-card.status-ignored { border-left-color: var(--red); }
 
@@ -483,7 +471,6 @@
       background: var(--surface-2);
       border: 1px solid var(--border);
       font-size: 13px;
-      transition: all var(--trans);
       flex-shrink: 0;
     }
 
@@ -562,7 +549,6 @@
     }
 
     th:hover { color: var(--text-dim); }
-
     th .sort-icon { margin-left: 4px; font-size: 10px; opacity: .5; }
 
     td {
@@ -573,11 +559,7 @@
     }
 
     tbody tr:last-child td { border-bottom: none; }
-
-    tbody tr:hover td {
-      background: var(--surface-2);
-    }
-
+    tbody tr:hover td { background: var(--surface-2); }
     tbody tr.expanded-parent td { background: var(--surface-2); }
 
     .expand-row td {
@@ -702,7 +684,6 @@
       -webkit-backdrop-filter: blur(12px);
       position: relative;
       overflow: hidden;
-      transition: all var(--trans);
     }
 
     .metric-card::after {
@@ -857,7 +838,6 @@
       outline: none;
       background: var(--bg);
       color: var(--text);
-      transition: all var(--trans);
     }
 
     .field-group input:focus,
@@ -884,7 +864,6 @@
       align-items: center;
       justify-content: center;
       color: var(--muted);
-      transition: all var(--trans);
     }
 
     .btn-close-x:hover {
@@ -941,14 +920,11 @@
     ============================================================ */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 99px;
-    }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
 
     /* ============================================================
-       MOBILE NAV
+       MOBILE
     ============================================================ */
     @media (max-width: 600px) {
       .nav-tabs { margin-left: 8px; }
@@ -960,8 +936,8 @@
 
 <body>
 
-  <!-- PARTICLES BACKGROUND -->
-  <div id="tsparticles"></div>
+  <!-- PARTICLE CANVAS — must be first child of body -->
+  <canvas id="arachnode-bg"></canvas>
 
   <!-- NAVBAR -->
   <nav id="navbar">
@@ -978,8 +954,8 @@
       </div>
     </div>
     <div class="nav-right">
-      <button id="btn-theme" title="Toggle theme" aria-label="Toggle theme">🌙</button>
-      <button id="btn-scrape">▶ Trigger Scrape</button>
+      <button id="btn-theme" aria-label="Toggle theme">🌙 Dark</button>
+      <button id="btn-scrape">+ Scrape</button>
     </div>
   </nav>
 
@@ -1138,7 +1114,6 @@
     // THEME SYSTEM
     // ===========================================================================
     const THEME_KEY = 'arachnode-theme';
-    const ICONS = { dark: '🌙', light: '☀️' };
 
     function getTheme() {
       return localStorage.getItem(THEME_KEY) ||
@@ -1147,18 +1122,20 @@
 
     function applyTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
-      document.getElementById('btn-theme').textContent = ICONS[theme === 'dark' ? 'light' : 'dark'];
+      const btn = document.getElementById('btn-theme');
+      if (btn) btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
       localStorage.setItem(THEME_KEY, theme);
-      // Re-render chart with new colors if it exists
-      if (state?.chart) {
-        state.chart.options.scales.x.grid.color = getComputedStyle(document.documentElement)
+      // Re-render chart colors if it exists
+      if (state && state.chart) {
+        const gridColor = getComputedStyle(document.documentElement)
           .getPropertyValue('--border').trim();
-        state.chart.options.scales.y.grid.color = getComputedStyle(document.documentElement)
-          .getPropertyValue('--border').trim();
+        const textColor = getComputedStyle(document.documentElement)
+          .getPropertyValue('--muted').trim();
+        state.chart.options.scales.x.ticks.color = textColor;
+        state.chart.options.scales.y.ticks.color = textColor;
+        state.chart.options.scales.y.grid.color  = gridColor;
         state.chart.update();
       }
-      // Re-init particles with new color
-      initParticles(theme);
     }
 
     function toggleTheme() {
@@ -1166,101 +1143,84 @@
       applyTheme(current === 'dark' ? 'light' : 'dark');
     }
 
-    // Apply saved theme immediately (before any render)
+    // Apply saved theme immediately
     applyTheme(getTheme());
 
     // ===========================================================================
-    // PARTICLES BACKGROUND
+    // PARTICLE BACKGROUND
     // ===========================================================================
-    let particlesInstance = null;
+    (function () {
+      const canvas = document.getElementById('arachnode-bg');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const N = 55, LINK = 140;
+      let W, H, pts = [];
 
-    function getParticlesConfig(theme) {
-      const isDark = theme === 'dark';
-      const color = isDark ? '#7c5cfc' : '#6c47ff';
-      const linkColor = isDark ? '#4f9eff' : '#2563eb';
-      const opacity = isDark ? 0.35 : 0.2;
-      const linkOpacity = isDark ? 0.15 : 0.08;
-
-      return {
-        fullScreen: { enable: false },
-        background: { color: { value: 'transparent' } },
-        fpsLimit: 60,
-        particles: {
-          number: {
-            value: window.innerWidth < 768 ? 30 : 60,
-            density: { enable: true, area: 900 },
-          },
-          color: { value: color },
-          shape: { type: 'circle' },
-          opacity: {
-            value: opacity,
-            animation: { enable: true, speed: 0.6, minimumValue: 0.05, sync: false },
-          },
-          size: {
-            value: { min: 1, max: 2.5 },
-            animation: { enable: true, speed: 1.2, minimumValue: 0.5, sync: false },
-          },
-          links: {
-            enable: true,
-            color: linkColor,
-            distance: 160,
-            opacity: linkOpacity,
-            width: 1,
-          },
-          move: {
-            enable: true,
-            speed: 0.6,
-            direction: 'none',
-            random: true,
-            straight: false,
-            outModes: { default: 'bounce' },
-            attract: { enable: false },
-          },
-        },
-        interactivity: {
-          detectsOn: 'window',
-          events: {
-            onHover: { enable: true, mode: 'grab' },
-            resize: true,
-          },
-          modes: {
-            grab: {
-              distance: 120,
-              links: { opacity: isDark ? 0.4 : 0.2 },
-            },
-          },
-        },
-        detectRetina: true,
-      };
-    }
-
-    async function initParticles(theme) {
-      // Wait for tsParticles to be available
-      if (typeof tsParticles === 'undefined') return;
-      // Destroy old instance
-      if (particlesInstance) {
-        await particlesInstance.destroy();
-        particlesInstance = null;
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
       }
-      try {
-        particlesInstance = await tsParticles.load('tsparticles', getParticlesConfig(theme || getTheme()));
-      } catch (e) {
-        console.warn('tsParticles failed to load:', e);
-      }
-    }
 
-    // Init particles after scripts load
-    window.addEventListener('load', () => {
-      initParticles(getTheme());
-    });
+      function getColor() {
+        // reads --particle-rgb CSS variable set per theme
+        const raw = getComputedStyle(document.documentElement)
+          .getPropertyValue('--particle-rgb').trim();
+        return raw || '124, 92, 252';
+      }
+
+      function spawn() {
+        return {
+          x:  Math.random() * W,
+          y:  Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          r:  Math.random() * 1.5 + 0.5,
+        };
+      }
+
+      resize();
+      window.addEventListener('resize', () => { resize(); pts.forEach(p => { p.x = Math.min(p.x, W); p.y = Math.min(p.y, H); }); });
+      pts = Array.from({ length: N }, spawn);
+
+      (function frame() {
+        ctx.clearRect(0, 0, W, H);
+        const rgb = getColor();
+
+        pts.forEach(p => {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0 || p.x > W) p.vx *= -1;
+          if (p.y < 0 || p.y > H) p.vy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${rgb}, 0.5)`;
+          ctx.fill();
+        });
+
+        for (let i = 0; i < N; i++) {
+          for (let j = i + 1; j < N; j++) {
+            const dx = pts[i].x - pts[j].x;
+            const dy = pts[i].y - pts[j].y;
+            const d  = Math.sqrt(dx * dx + dy * dy);
+            if (d < LINK) {
+              ctx.beginPath();
+              ctx.moveTo(pts[i].x, pts[i].y);
+              ctx.lineTo(pts[j].x, pts[j].y);
+              ctx.strokeStyle = `rgba(${rgb}, ${0.18 * (1 - d / LINK)})`;
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(frame);
+      })();
+    })();
 
     // ===========================================================================
     // CONFIGURATION
     // ===========================================================================
-    const API_BASE = ''; // change if backend is on a different host
+    const API_BASE = '';
     const API = (p) => `${API_BASE}/api${p}`;
 
-    // === STATE ===
     const state = {
       jobs: [],
       contacts: {},
@@ -1304,9 +1264,8 @@
     }
 
     // ===========================================================================
-    // COMPONENTS
+    // HELPERS
     // ===========================================================================
-
     function toast(msg, type = 'info', duration = 4000) {
       const el = document.createElement('div');
       el.className = `toast ${type}`;
@@ -1373,7 +1332,7 @@
     }
 
     // ===========================================================================
-    // VIEWS: JOBS
+    // JOBS VIEW
     // ===========================================================================
     async function loadJobs(force = false) {
       if (state.jobs.length && !force) { renderJobs(); return; }
@@ -1474,7 +1433,7 @@
       }
     }
 
-    // === DETAIL PANEL ===
+    // DETAIL PANEL
     function openDetailPanel(jobId) {
       const job = state.jobs.find(j => j.id === jobId);
       if (!job) return;
@@ -1563,7 +1522,7 @@
     }
 
     // ===========================================================================
-    // VIEWS: CONTACTS
+    // CONTACTS VIEW
     // ===========================================================================
     async function loadContacts(force = false) {
       const q = document.getElementById('contact-search').value.trim();
@@ -1615,7 +1574,7 @@
     }
 
     // ===========================================================================
-    // VIEWS: EMAILS
+    // EMAILS VIEW
     // ===========================================================================
     async function loadEmails(force = false) {
       const jobs = state.jobs.slice(0, 50);
@@ -1682,7 +1641,7 @@
     }
 
     // ===========================================================================
-    // VIEWS: STATS
+    // STATS VIEW
     // ===========================================================================
     async function loadStats(force = false) {
       if (state.stats && !force) { renderStats(); return; }
@@ -1690,15 +1649,6 @@
       state.stats = stats;
       state.summary = summary;
       renderStats();
-    }
-
-    function getChartColors() {
-      const style = getComputedStyle(document.documentElement);
-      return {
-        bg: style.getPropertyValue('--accent').trim(),
-        grid: style.getPropertyValue('--border').trim(),
-        text: style.getPropertyValue('--muted').trim(),
-      };
     }
 
     function renderStats() {
@@ -1716,7 +1666,9 @@
       const labels = Object.keys(bySource);
       const values = Object.values(bySource);
       const canvas = document.getElementById('source-chart');
-      const colors = getChartColors();
+      const style  = getComputedStyle(document.documentElement);
+      const gridColor = style.getPropertyValue('--border').trim();
+      const textColor = style.getPropertyValue('--muted').trim();
 
       if (labels.length) {
         if (state.chart) state.chart.destroy();
@@ -1740,15 +1692,12 @@
               tooltip: { callbacks: { label: (c) => `${c.parsed.y} jobs` } },
             },
             scales: {
-              x: {
-                grid: { display: false },
-                ticks: { color: colors.text },
-              },
+              x: { grid: { display: false }, ticks: { color: textColor } },
               y: {
-                grid: { color: colors.grid, display: true },
+                grid: { color: gridColor },
                 border: { display: false },
                 beginAtZero: true,
-                ticks: { stepSize: 1, color: colors.text },
+                ticks: { stepSize: 1, color: textColor },
               },
             }
           }
@@ -1776,7 +1725,7 @@
       state.activeTab = tab;
       document.querySelectorAll('.nav-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
       document.querySelectorAll('.tab-view').forEach(s => s.classList.toggle('active', s.id === `tab-${tab}`));
-      if (tab === 'jobs')     loadJobs();
+      if (tab === 'jobs')          loadJobs();
       else if (tab === 'contacts') loadContacts();
       else if (tab === 'emails')   loadEmails();
       else if (tab === 'stats')    loadStats();
@@ -1785,16 +1734,12 @@
     // ===========================================================================
     // EVENT WIRING
     // ===========================================================================
-
-    // Theme toggle
     document.getElementById('btn-theme').addEventListener('click', toggleTheme);
 
-    // Tabs
     document.querySelectorAll('.nav-tab').forEach(btn => {
       btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
 
-    // Jobs filter bar
     document.getElementById('job-search').addEventListener('input', e => {
       state.filters.search = e.target.value;
       renderJobs();
@@ -1813,7 +1758,6 @@
       loadContacts(true);
     });
 
-    // Jobs grid click delegation
     document.getElementById('jobs-grid').addEventListener('click', e => {
       const actionBtn = e.target.closest('[data-action]');
       if (actionBtn) {
@@ -1828,11 +1772,9 @@
       if (card) openDetailPanel(card.dataset.id);
     });
 
-    // Detail panel close
     document.getElementById('panel-close').addEventListener('click', closePanel);
     document.getElementById('panel-backdrop').addEventListener('click', closePanel);
 
-    // Contacts table: sort headers + row expand
     document.getElementById('contacts-table').addEventListener('click', e => {
       const th = e.target.closest('th[data-col]');
       if (th) {
@@ -1854,7 +1796,6 @@
       if (e.key === 'Enter') { state.contacts = {}; loadContacts(true); }
     });
 
-    // Emails: view & send
     document.getElementById('emails-body').addEventListener('click', e => {
       const viewBtn = e.target.closest('.email-view-btn');
       if (viewBtn) {
@@ -1871,7 +1812,6 @@
       if (sendBtn) sendEmail(sendBtn.dataset.id, sendBtn.dataset.i);
     });
 
-    // Scrape modal
     const scrapeModal = document.getElementById('scrape-modal');
     document.getElementById('btn-scrape').addEventListener('click',  () => scrapeModal.classList.add('open'));
     document.getElementById('modal-close').addEventListener('click', () => scrapeModal.classList.remove('open'));
@@ -1891,7 +1831,6 @@
       if (r !== null) toast('Scraping started — new jobs will appear in ~60 seconds', 'info', 6000);
     });
 
-    // Offline banner dismiss
     document.getElementById('btn-dismiss-banner').addEventListener('click', hideBanner);
 
     // ===========================================================================
