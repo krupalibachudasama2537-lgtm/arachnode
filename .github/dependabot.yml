@@ -1,0 +1,30 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/aggregator-service"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/contact-discovery-service"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/crawler-service"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/email-generator-service"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/gateway"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/scheduler"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pip"
+    directory: "/scraper-service"
+    schedule:
+      interval: "weekly"
